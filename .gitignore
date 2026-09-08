@@ -1,0 +1,17 @@
+# DigiPi images (do not commit or redistribute)
+work/
+*.img
+*.img.xz
+digipi*.zip
+digipi*.img*
+
+# Secrets / local
+.env
+.env.*
+*.pem
+*.key
+
+# OS
+Thumbs.db
+.DS_Store
+Desktop.ini
