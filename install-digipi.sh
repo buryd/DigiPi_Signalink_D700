@@ -115,11 +115,14 @@ if [[ -e "${BOOT_PART}" ]]; then
   mount "${BOOT_PART}" "${BOOT_MNT}" || true
   if [[ -f "${BOOT_MNT}/config.txt" || -f "${BOOT_MNT}/cmdline.txt" ]]; then
     cp "${PI_SCRIPT}" "${BOOT_MNT}/configure-signalink-d700.sh"
+    if [[ -f "${ROOT}/scripts/install-linbpq.sh" ]]; then
+      cp "${ROOT}/scripts/install-linbpq.sh" "${BOOT_MNT}/install-linbpq.sh"
+    fi
     cat > "${BOOT_MNT}/RUN-ON-PI.txt" <<'EOF'
 After Initialize (USB Audio, GPIO12):
   sudo remount
   sudo bash /boot/firmware/configure-signalink-d700.sh
-  # older images: sudo bash /boot/configure-signalink-d700.sh
+  # optional: sudo bash /boot/firmware/install-linbpq.sh
 EOF
     echo "Copied helper to boot partition."
   fi

@@ -32,6 +32,7 @@ param(
 $ErrorActionPreference = 'Stop'
 $Root = Split-Path -Parent $MyInvocation.MyCommand.Path
 $PiScript = Join-Path $Root 'scripts\configure-signalink-d700.sh'
+$LinbpqScript = Join-Path $Root 'scripts\install-linbpq.sh'
 $Procedure = Join-Path $Root 'PROCEDURE.md'
 
 function Write-Step([string]$Message) {
@@ -251,6 +252,9 @@ function Copy-HelperToBoot {
     }
 
     Copy-Item -LiteralPath $PiScript -Destination (Join-Path $boot 'configure-signalink-d700.sh') -Force
+    if (Test-Path $LinbpqScript) {
+        Copy-Item -LiteralPath $LinbpqScript -Destination (Join-Path $boot 'install-linbpq.sh') -Force
+    }
     $readme = Join-Path $boot 'RUN-ON-PI.txt'
     @"
 DigiPi SignaLink + Kenwood TM-D700 helper
@@ -264,6 +268,9 @@ After Initialize (radio interface = USB Audio, GPIO12):
   sudo cp /boot/firmware/configure-signalink-d700.sh /home/pi/
   chmod +x /home/pi/configure-signalink-d700.sh
   sudo /home/pi/configure-signalink-d700.sh
+
+Optional linBPQ dashboard switch:
+  sudo bash /boot/firmware/install-linbpq.sh
 
 Then Reboot from http://digipi/
 

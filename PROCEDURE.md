@@ -241,11 +241,14 @@ The home page toggles are **service on/off**, not a settings form. Callsign, gri
 | **APRS GPS Tracker** | Mobile GPS beacon | Needs a GPS receiver |
 | **APRS WebChat** | APRS messaging app | Turn TNC/igate **on first**, then this, then the **Webchat** link |
 | **AX.25 Node Network** | Linux node/BBS (`YOURCALL-4`) | Then **AXCall** or LinPac |
+| **AX.25 linBPQ** | G8BPQ linBPQ node/BBS (`YOURCALL-7`) | Install first (§16). Not with Node |
 | **Winlink Email Server** | RMS gateway (`YOURCALL-10`) | Not at the same time as Node |
 | **Pat Winlink Client** | Your Winlink mailbox | Then **PatEmail** |
 | **WSJTX / JS8Call / FLDigi / SSTV** | GUI apps over VNC/web | Poor fit for the D700 DATA jack |
 
 **LinPac is not a switch.** Start **APRS TNC/igate** (or Node), then **AXCall** → LinPac.
+
+**linBPQ** is a switch under AX.25 after you run `install-linbpq.sh`. It runs its own Direwolf (not the APRS igate) and is exclusive with Node, TNC, and Winlink RMS.
 
 Bottom links (**Webchat**, **PktLog**, **Audio**, **AXCall**, **Shell**, …) only work after the matching switch is green.
 
@@ -301,7 +304,7 @@ Initialize writes your callsign into `/home/pi/config/LinPac/macro/init.mac` (ru
 grep -E 'mycall|unsrc|port |HOME_BBS|QRG' /home/pi/config/LinPac/macro/init.mac
 ```
 
-You want `port radio`, `mycall@1 YOURCALL` (no SSID), `unsrc YOURCALL`. DigiPi SSIDs: LinPac = no SSID, TNC/igate = `-2`, node = `-4`, Winlink = `-10`.
+You want `port radio`, `mycall@1 YOURCALL` (no SSID), `unsrc YOURCALL`. DigiPi SSIDs: LinPac = no SSID, TNC/igate = `-2`, node = `-4`, linBPQ = `-7`, Winlink = `-10`.
 
 If the callsign is truncated (for example `kc4jr` instead of `kc4jir`), Initialize dropped a character. After `sudo remount`, fix every live config — at minimum:
 
@@ -354,6 +357,33 @@ A Pi 3B+ DigiPi reboot of ~**1 minute 18 seconds** is normal. Measured userspace
 | NetworkManager | ~12 s | Associate and wait-online |
 
 The image is read-only. Each boot copies LinPac, fldigi, VNC, and related trees into RAM under `/run`. If you land on hotspot **http://10.0.0.5/**, you paid the full autohotspot wait.
+
+---
+
+## 16. linBPQ on the DigiPi dashboard
+
+Stock DigiPi has Linux **AX.25 Node Network** (uronode). This helper adds **G8BPQ linBPQ** as the next switch in that AX.25 group.
+
+On the Pi (after Initialize and SignaLink setup):
+
+```bash
+sudo remount
+sudo bash /boot/firmware/install-linbpq.sh
+```
+
+If the script is not on the boot partition, copy `scripts/install-linbpq.sh` from this repo, then `sudo bash ~/install-linbpq.sh`.
+
+Refresh **http://digipi/**. You should see **AX.25 linBPQ** directly under **AX.25 Node Network**.
+
+1. D700 on local **packet simplex** (often 145.010), internal TNC off.
+2. Leave **AX.25 Node Network** off.
+3. Flip **AX.25 linBPQ** on (green). DigiPi stops TNC/Node/Winlink and starts a **dedicated Direwolf** (KISS :8001) plus linBPQ. This is not the APRS igate.
+4. Open **linBPQ** at the bottom of the page, or **http://digipi:8008/**. Telnet user `sysop` (password is your DigiPi node password, default `abc123`).
+5. At the node prompt, `BBS` is **YOURCALL-1** and `CHAT` is **YOURCALL-11**. Those only run if `bpq32.cfg` has `LINMAIL` and `LINCHAT` after the APPLICATION lines (the installer writes them).
+6. After BBS/node use, click **Save Configuration** so `/home/pi/linbpq` is copied from `/run/linbpq` onto the SD card.
+7. Edit `/home/pi/linbpq/bpq32.cfg` after `sudo remount` for aliases, BBS, and RMS. Then toggle the switch off/on.
+
+linBPQ identity is **YOURCALL-7**. BBS application is **YOURCALL-1**. Chat is **YOURCALL-11**. Linux node stays **YOURCALL-4** if you use that switch instead. Starting **APRS TNC/igate** or **AX.25 Node Network** stops linBPQ (and the reverse).
 
 ---
 
