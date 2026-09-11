@@ -61,7 +61,7 @@ DigiPi + SignaLink + Kenwood TM-D700 (Pi 3B+)
 5. Boot Pi, join Wi-Fi 'DigiPi' / abcdefghij, open http://10.0.0.5/
 6. Set home Wi-Fi, reboot, open http://digipi/
 7. Initialize: radio interface = USB Audio, GPIO12. Reboot.
-8. sudo remount && sudo /boot/configure-signalink-d700.sh
+8. sudo remount && sudo bash /boot/firmware/configure-signalink-d700.sh
 "@
     }
 }
@@ -316,7 +316,7 @@ Write-Host @"
 4. Power the Pi. Join Wi-Fi 'DigiPi' password abcdefghij.
 5. http://10.0.0.5/  -> Wifi -> home SSID -> reboot.
 6. http://digipi/ -> Initialize -> radio interface USB Audio, GPIO12.
-7. After reboot: sudo remount && sudo bash /boot/configure-signalink-d700.sh
+7. After reboot: sudo remount && sudo bash /boot/firmware/configure-signalink-d700.sh
 8. Check PktLog (~50) and SignaLink PTT LED on a test APRS frame.
 
 See PROCEDURE.md for pinout, menus, and troubleshooting.

@@ -14,14 +14,25 @@ This repository does **not** include the DigiPi OS image. Download that from [di
 
 ```bash
 sudo remount
-sudo bash /boot/configure-signalink-d700.sh
+sudo bash /boot/firmware/configure-signalink-d700.sh
 ```
+
+On older images the helper is `/boot/configure-signalink-d700.sh`. Do not type the filename alone; it is not on `PATH`.
+
+## After it boots
+
+| Goal | What to use |
+| --- | --- |
+| APRS igate + chat | Dashboard **APRS TNC/igate**, then **APRS WebChat** |
+| Keyboard packet (LinPac) | TNC/igate or Node on, then **AXCall** → LinPac |
+| Switch meanings | [PROCEDURE.md](PROCEDURE.md) §12 |
+| Why reboot takes ~1 minute | [PROCEDURE.md](PROCEDURE.md) §15 |
 
 ## Files
 
 | File | Purpose |
 | --- | --- |
-| `PROCEDURE.md` | Full install and hardware procedure |
+| `PROCEDURE.md` | Hardware, flash, dashboard, APRS, LinPac |
 | `install-digipi.bat` / `install-digipi.ps1` | Windows SD-card flasher |
 | `install-digipi.sh` | Linux/macOS flasher |
 | `scripts/configure-signalink-d700.sh` | On-Pi SignaLink ALSA / Direwolf setup |

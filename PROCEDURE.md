@@ -134,17 +134,23 @@ Click **Initialize**, then **Reboot**. The Pi returns to read-only “firmware�
 
 ## 7. On-Pi SignaLink configuration
 
-SSH in, or use the DigiPi **Shell** page:
+SSH in, or use the DigiPi **Shell** page. On current DigiPi (Bookworm, v2.x) the FAT boot partition is mounted at **`/boot/firmware`**, not `/boot`.
 
 ```bash
 sudo remount
-sudo cp /boot/configure-signalink-d700.sh /home/pi/ 2>/dev/null || \
-  sudo cp /boot/firmware/configure-signalink-d700.sh /home/pi/
-chmod +x /home/pi/configure-signalink-d700.sh
-sudo /home/pi/configure-signalink-d700.sh
+ls -l /boot/firmware/configure-signalink-d700.sh /boot/configure-signalink-d700.sh
+sudo bash /boot/firmware/configure-signalink-d700.sh
 ```
 
-If the script was not copied to boot, copy it from this repo over SCP.
+`configure-signalink-d700.sh: command not found` means bash never found a path. Always use `sudo bash` and the full path. The helper is not a DigiPi built-in and is not on `PATH`.
+
+If `ls` finds nothing, the Windows/Linux flasher did not copy the helper (for example you used Raspberry Pi Imager alone). From this PC:
+
+```powershell
+scp scripts\configure-signalink-d700.sh pi@10.0.0.5:~/
+```
+
+Then on the Pi: `sudo remount && chmod +x ~/configure-signalink-d700.sh && sudo bash ~/configure-signalink-d700.sh`.
 
 The script:
 
@@ -209,6 +215,145 @@ Community: [DigiPi Google Group](https://groups.google.com/g/digipi) · [Discord
 | Radio stays keyed | SignaLink **DLY** not at minimum. |
 | Hotspot never appears | Bad flash, wrong Pi model, or insufficient power. |
 | Init already used | Edit `/home/pi/localize.env` after `sudo remount`. |
+| `configure-signalink-d700.sh: command not found` | Missing path. Use `sudo bash /boot/firmware/configure-signalink-d700.sh`. |
+| LinPac / APRS call is missing a letter | Initialize truncated it. See §14. |
+| Reboot takes ~1 minute | Normal. See §15. |
+
+---
+
+## 12. Dashboard switches
+
+The home page toggles are **service on/off**, not a settings form. Callsign, grid, and radio interface come from **Initialize**. Each flip starts or stops a systemd unit and reloads the page.
+
+| Square | Meaning |
+| --- | --- |
+| Grey | Off |
+| Green | Running |
+| Red | Failed — open **SysLog** / **PktLog** |
+
+**One radio modem at a time.** Starting APRS TNC stops digipeater, node, Winlink RMS, FT8, FLDigi, and the rest. Direwolf cannot share the SignaLink with two stacks.
+
+| Switch | What it starts | Use on this station |
+| --- | --- | --- |
+| **APRS TNC/igate** | 1200-baud Direwolf + APRS-IS (`YOURCALL-2`) | VHF APRS / WebChat / LinPac modem |
+| **APRS HF TNC/igate** | 300-baud HF packet | Leave **off** (D700 is VHF FM) |
+| **APRS Digipeater** | 1200-baud Direwolf that also repeats RF | Do not run with TNC/igate |
+| **APRS GPS Tracker** | Mobile GPS beacon | Needs a GPS receiver |
+| **APRS WebChat** | APRS messaging app | Turn TNC/igate **on first**, then this, then the **Webchat** link |
+| **AX.25 Node Network** | Linux node/BBS (`YOURCALL-4`) | Then **AXCall** or LinPac |
+| **Winlink Email Server** | RMS gateway (`YOURCALL-10`) | Not at the same time as Node |
+| **Pat Winlink Client** | Your Winlink mailbox | Then **PatEmail** |
+| **WSJTX / JS8Call / FLDigi / SSTV** | GUI apps over VNC/web | Poor fit for the D700 DATA jack |
+
+**LinPac is not a switch.** Start **APRS TNC/igate** (or Node), then **AXCall** → LinPac.
+
+Bottom links (**Webchat**, **PktLog**, **Audio**, **AXCall**, **Shell**, …) only work after the matching switch is green.
+
+Switches **do not survive reboot**. Stock `digipi-boot.service` starts nothing but the “Online” banner. To auto-start IGate:
+
+```bash
+sudo remount
+sudo nano /etc/systemd/system/digipi-boot.service
+```
+
+Uncomment **one** `ExecStart=systemctl start …` line (for example `tnc`). Leave the others commented.
+
+**Save Configuration** does **not** store switch positions. It copies the RAM overlay (audio, fldigi/wsjtx, LinPac files, logs) back to the SD card. Press it after **Audio** or app edits, then **Restart** or **Shutdown**.
+
+---
+
+## 13. APRS TNC / IGate
+
+**TNC** = Direwolf as a software modem on SignaLink USB audio. The D700 stays analog FM; its built-in TNC stays **off**.
+
+**IGate** = those decoded packets are uploaded to APRS-IS. Your login is `YOURCALL-2`. A `PBEACON sendto=IG` puts the igate on [aprs.fi](https://aprs.fi) without beaconing that position on RF.
+
+```
+144.390 FM → D700 DATA → SignaLink USB → Direwolf
+                 RF decode ──► APRS-IS (YOURCALL-2)
+                 WebChat / KISS ──► SignaLink VOX ──► D700 TX
+```
+
+TNC/igate does **not** digipeat `WIDE1-1`. That is **APRS Digipeater**. Internet → RF is limited (nearby messages); the whole APRS-IS feed is not dumped onto 144.390.
+
+1. D700 on **144.390 FM** (US), internal TNC off, SignaLink **DLY** fully CCW.
+2. Dashboard: **APRS TNC/igate** ON.
+3. **PktLog** — other stations decode; audio average near **50**.
+4. **APRS WebChat** ON → **Webchat** to send a message or beacon.
+5. Check `YOURCALL-2` on aprs.fi.
+
+Decodes but no map: radio path is fine, APRS-IS login is not. No decodes: audio, jumpers, frequency, or the radio TNC still on.
+
+---
+
+## 14. LinPac on DigiPi
+
+Do **not** install a second Direwolf/LinPac stack on this image. DigiPi already includes LinPac.
+
+1. Hardware and `configure-signalink-d700.sh` as above.
+2. Tune the D700 to local **packet simplex** (often 145.010 / 145.050), not APRS 144.390, unless you intend to chat on APRS.
+3. Dashboard: **APRS TNC/igate** ON (1200-baud modem). For HF 300 baud only, use **APRS HF TNC**.
+4. Open **AXCall** / LinPac (browser terminal runs `/home/pi/linpac.sh`). If no TNC is up, that script starts 1200-baud TNC and attaches AX.25 port `radio`.
+
+Initialize writes your callsign into `/home/pi/config/LinPac/macro/init.mac` (runtime copy is `/home/pi/.config/LinPac`, often under `/run`). Confirm:
+
+```bash
+grep -E 'mycall|unsrc|port |HOME_BBS|QRG' /home/pi/config/LinPac/macro/init.mac
+```
+
+You want `port radio`, `mycall@1 YOURCALL` (no SSID), `unsrc YOURCALL`. DigiPi SSIDs: LinPac = no SSID, TNC/igate = `-2`, node = `-4`, Winlink = `-10`.
+
+If the callsign is truncated (for example `kc4jr` instead of `kc4jir`), Initialize dropped a character. After `sudo remount`, fix every live config — at minimum:
+
+```bash
+sudo sed -i -E 's/\bBADCALL\b/GOODCALL/g' \
+  /home/pi/config/LinPac/macro/init.mac \
+  /home/pi/.config/LinPac/macro/init.mac \
+  /home/pi/direwolf.tnc.conf \
+  /etc/ax25/axports
+```
+
+Replace `BADCALL` / `GOODCALL` with the truncated and full call. Then `sudo chown pi:pi /home/pi/direwolf.tnc.conf` (`sudo sed` can leave the file `root:600`, which prevents Direwolf from copying it to `/run`). Restart **APRS TNC/igate**.
+
+Fresh images keep Craig’s old LinPac screen logs. Clear them:
+
+```bash
+sudo remount
+truncate -s 0 /home/pi/config/LinPac/window1.screen \
+  /home/pi/config/LinPac/monitor.screen \
+  /home/pi/.config/LinPac/window1.screen \
+  /home/pi/.config/LinPac/monitor.screen
+```
+
+Then **Save Configuration**.
+
+LinPac commands start with `:`. Anything else is sent to the connected station.
+
+| Key / command | Action |
+| --- | --- |
+| F1–F8 | QSO channels |
+| F10 | Unproto / CQ |
+| PageUp / PageDown | Scrollback |
+| `:c OTHERCALL` | Connect |
+| `:d` | Disconnect |
+| Alt+X | Quit |
+
+Quick TNC test without LinPac: `axcall radio OTHERCALL`.
+
+---
+
+## 15. Why restart takes about a minute
+
+A Pi 3B+ DigiPi reboot of ~**1 minute 18 seconds** is normal. Measured userspace:
+
+| Service | Wait | Why |
+| --- | --- | --- |
+| `autohotspot.service` | ~35 s | Hard-coded `sleep 30`, then hotspot if home Wi-Fi is missing |
+| `rc-local.service` | ~19 s | Splash, copy overlay into `/run`, another `sleep 10` |
+| `digipi-boot.service` | ~10 s | Another `sleep 10`, then Online/Hotspot banner |
+| NetworkManager | ~12 s | Associate and wait-online |
+
+The image is read-only. Each boot copies LinPac, fldigi, VNC, and related trees into RAM under `/run`. If you land on hotspot **http://10.0.0.5/**, you paid the full autohotspot wait.
 
 ---
 

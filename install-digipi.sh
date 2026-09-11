@@ -19,7 +19,8 @@ After flash, copies configure-signalink-d700.sh to the boot partition.
 On the Pi, after Initialize (USB Audio, GPIO12):
 
   sudo remount
-  sudo bash /boot/configure-signalink-d700.sh
+  sudo bash /boot/firmware/configure-signalink-d700.sh
+  # older images: sudo bash /boot/configure-signalink-d700.sh
 EOF
 }
 
@@ -117,7 +118,8 @@ if [[ -e "${BOOT_PART}" ]]; then
     cat > "${BOOT_MNT}/RUN-ON-PI.txt" <<'EOF'
 After Initialize (USB Audio, GPIO12):
   sudo remount
-  sudo bash /boot/configure-signalink-d700.sh
+  sudo bash /boot/firmware/configure-signalink-d700.sh
+  # older images: sudo bash /boot/configure-signalink-d700.sh
 EOF
     echo "Copied helper to boot partition."
   fi
