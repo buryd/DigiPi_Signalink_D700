@@ -360,30 +360,121 @@ The image is read-only. Each boot copies LinPac, fldigi, VNC, and related trees 
 
 ---
 
-## 16. linBPQ on the DigiPi dashboard
+## 16. Add linBPQ to DigiPi
 
-Stock DigiPi has Linux **AX.25 Node Network** (uronode). This helper adds **G8BPQ linBPQ** as the next switch in that AX.25 group.
+Stock DigiPi has Linux **AX.25 Node Network** (uronode). G8BPQ **linBPQ** is not on the image. `scripts/install-linbpq.sh` installs it and adds an **AX.25 linBPQ** switch under that AX.25 group.
 
-On the Pi (after Initialize and SignaLink setup):
+linBPQ runs its **own** Direwolf (KISS on port 8001). It is not the APRS igate. It cannot share the SignaLink with Node, TNC, or DigiPi Winlink RMS.
+
+### Before you start
+
+1. Finish **Initialize** (callsign, grid, node password, Winlink password).
+2. Run `configure-signalink-d700.sh` (§7). Radio interface **USB Audio, GPIO12**.
+3. D700: internal TNC **off**, APRS **off**, menu **1-9-6 = 1200**, radio VOX **off**. SignaLink **DLY** fully CCW.
+4. For Winlink CMS (`RMS`), the Pi needs **home Wi-Fi / internet**. The DigiPi hotspot alone cannot reach Winlink.
+
+The Windows/Linux flashers copy `install-linbpq.sh` onto the boot partition when that file is in this repo.
+
+### Install
+
+On the Pi:
 
 ```bash
 sudo remount
 sudo bash /boot/firmware/install-linbpq.sh
 ```
 
-If the script is not on the boot partition, copy `scripts/install-linbpq.sh` from this repo, then `sudo bash ~/install-linbpq.sh`.
+On older images the helper is `/boot/install-linbpq.sh`. If it is not on the boot partition, copy `scripts/install-linbpq.sh` from this repo to the Pi (Shell upload, `scp`, or `/home/pi/`), then:
 
-Refresh **http://digipi/**. You should see **AX.25 linBPQ** directly under **AX.25 Node Network**.
+```bash
+sudo remount
+chmod +x ~/install-linbpq.sh
+sudo bash ~/install-linbpq.sh
+```
 
-1. D700 on local **packet simplex** (often 145.010), internal TNC off.
-2. Leave **AX.25 Node Network** off.
-3. Flip **AX.25 linBPQ** on (green). DigiPi stops TNC/Node/Winlink and starts a **dedicated Direwolf** (KISS :8001) plus linBPQ. This is not the APRS igate.
-4. Open **linBPQ** at the bottom of the page, or **http://digipi:8008/**. Telnet user `sysop` (password is your DigiPi node password, default `abc123`).
-5. At the node prompt, `BBS` is **YOURCALL-1** and `CHAT` is **YOURCALL-11**. Those only run if `bpq32.cfg` has `LINMAIL` and `LINCHAT` after the APPLICATION lines (the installer writes them).
-6. After BBS/node use, click **Save Configuration** so `/home/pi/linbpq` is copied from `/run/linbpq` onto the SD card.
-7. Edit `/home/pi/linbpq/bpq32.cfg` after `sudo remount` for aliases, BBS, and RMS. Then toggle the switch off/on.
+Refresh **http://digipi/** (or **http://10.0.0.5/**). **AX.25 linBPQ** should sit directly under **AX.25 Node Network**.
 
-linBPQ identity is **YOURCALL-7**. BBS application is **YOURCALL-1**. Chat is **YOURCALL-11**. Linux node stays **YOURCALL-4** if you use that switch instead. Starting **APRS TNC/igate** or **AX.25 Node Network** stops linBPQ (and the reverse).
+The installer writes `/home/pi/linbpq/` (binary, `bpq32.cfg`, HTML), a `linbpq.service` unit, a dedicated `direwolf.linbpq.sh`, and the home-page switch. Callsign and passwords come from `/home/pi/localize.env`.
+
+### Run it
+
+1. Tune the D700 to local **packet simplex** (often 145.010 / 145.030), not APRS 144.390.
+2. Leave **AX.25 Node Network**, **APRS TNC/igate**, and DigiPi **Winlink Email Server** **off**.
+3. Flip **AX.25 linBPQ** on (green).
+4. Open the **linBPQ** link at the bottom of the home page, or **http://digipi:8008/**.
+5. Sign in: user **`sysop`**, password = DigiPi node password (Initialize; default `abc123`). This is not the Linux `pi` login.
+6. After BBS/Chat/RMS use, click **Save Configuration** so `/run/linbpq` is copied to `/home/pi/linbpq` on the SD card.
+
+### Node commands and SSIDs
+
+| Command | Application | AX.25 call | Needs |
+| --- | --- | --- | --- |
+| (connect to node) | Switch | **YOURCALL-7** | linBPQ running |
+| `BBS` | Mail BBS | **YOURCALL-1** | `LINMAIL` in `bpq32.cfg` |
+| `CHAT` | Chat | **YOURCALL-11** | `LINCHAT` and `chatconfig.cfg` (`ApplNum=2`) |
+| `RMS` | Winlink CMS | **YOURCALL-10** | `CMS=1`, `CMSCALL`, `CMSPASS` (Initialize Winlink password) |
+
+Linux **AX.25 Node Network** stays **YOURCALL-4** if you use that switch instead. APRS igate stays **YOURCALL-2**.
+
+linBPQ ports:
+
+| Port | What it is | Connect |
+| --- | --- | --- |
+| **1** | Telnet / HTTP / CMS (internet) | Web console, `RMS` |
+| **2** | Direwolf → SignaLink → D700 (radio) | `c 2 OTHERCALL` or `c OTHERCALL` |
+
+Do **not** use `c 1` for an RF station. That is the telnet port.
+
+### Winlink email (`RMS`)
+
+With Initialize’s Winlink password present, the installer (or `enable-linbpq-winlink.sh`) sets `CMS=1` and `APPLICATION 3,RMS,C 1 CMS,YOURCALL-10`. Leave DigiPi **Winlink Email Server** off; linBPQ `RMS` is the Winlink path while linBPQ is on.
+
+1. Pi on home Wi-Fi.
+2. linBPQ web **Terminal** → type `RMS`.
+3. You should see a CMS connect and a `[WL2K-…]` banner. Type `B` to leave CMS.
+4. Over radio, a Winlink client can connect to **YOURCALL-10**.
+
+If CMS is unreachable, linBPQ falls back to the local BBS (`FALLBACKTORELAY` / `RELAYAPPL=BBS`).
+
+Already installed without RMS? Copy `scripts/enable-linbpq-winlink.sh` to the Pi:
+
+```bash
+sudo remount
+sudo bash ~/enable-linbpq-winlink.sh
+```
+
+### BBS and Chat not running
+
+`APPLICATION` lines only name the commands. The servers start only if `bpq32.cfg` has **`LINMAIL`** and **`LINCHAT`**. The installer writes those plus `chatconfig.cfg`. On an older install:
+
+```bash
+sudo remount
+sudo bash ~/enable-linbpq-mail-chat.sh
+```
+
+Then **Save Configuration**. At the node prompt, type `BBS` or `CHAT` (not `c 1`).
+
+### Edit configuration
+
+Canonical file: `/home/pi/linbpq/bpq32.cfg`. Runtime copy is `/run/linbpq/` (RAM).
+
+1. `sudo remount`
+2. **Stop** linBPQ first (`AX.25 linBPQ` off). Stop rsyncs `/run/linbpq` → `/home/pi/linbpq`; if you edit home while it is running, stop can overwrite your edit.
+3. Edit `/home/pi/linbpq/bpq32.cfg`.
+4. Start linBPQ (switch on). Start rsyncs home → `/run`.
+
+To keep an existing `bpq32.cfg` when re-running the installer: `sudo LINBPQ_KEEP_CFG=1 bash /boot/firmware/install-linbpq.sh`. That still adds missing `LINMAIL` / `LINCHAT` / CMS lines.
+
+### Troubleshooting
+
+| Symptom | What to check |
+| --- | --- |
+| No **AX.25 linBPQ** switch | Installer did not patch `/var/www/html/index.php`. Re-run `install-linbpq.sh`, hard-refresh the home page. |
+| Switch red / fails | **SysLog**. Another radio app still up. `sudo systemctl reset-failed linbpq` then flip the switch. |
+| `sysop` login rejected | Node password from Initialize (`NEWNODEPASS`), default `abc123`. Not `pi` / `raspberry`. |
+| `Sorry, Application BBS/CHAT is not running` | Missing `LINMAIL` / `LINCHAT`. Run `enable-linbpq-mail-chat.sh`. |
+| `RMS` does not reach CMS | No internet (hotspot-only), or no Winlink password in Initialize. Run `enable-linbpq-winlink.sh`. |
+| `c 1 OTHERCALL` then Invalid Command | Port 1 is telnet. Use `c 2 OTHERCALL` on packet simplex. |
 
 ---
 

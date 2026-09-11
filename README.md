@@ -19,13 +19,20 @@ sudo bash /boot/firmware/configure-signalink-d700.sh
 
 On older images the helper is `/boot/configure-signalink-d700.sh`. Do not type the filename alone; it is not on `PATH`.
 
+6. Optional — add linBPQ (node, BBS, Chat, Winlink CMS): **[PROCEDURE.md](PROCEDURE.md) §16**.
+
+```bash
+sudo remount
+sudo bash /boot/firmware/install-linbpq.sh
+```
+
 ## After it boots
 
 | Goal | What to use |
 | --- | --- |
 | APRS igate + chat | Dashboard **APRS TNC/igate**, then **APRS WebChat** |
 | Keyboard packet (LinPac) | TNC/igate or Node on, then **AXCall** → LinPac |
-| linBPQ node/BBS | `sudo bash /boot/firmware/install-linbpq.sh`, then dashboard **AX.25 linBPQ** |
+| linBPQ node / BBS / Winlink | [PROCEDURE.md](PROCEDURE.md) §16, then dashboard **AX.25 linBPQ** |
 | Switch meanings | [PROCEDURE.md](PROCEDURE.md) §12 |
 | Why reboot takes ~1 minute | [PROCEDURE.md](PROCEDURE.md) §15 |
 
@@ -33,8 +40,10 @@ On older images the helper is `/boot/configure-signalink-d700.sh`. Do not type t
 
 | File | Purpose |
 | --- | --- |
-| `PROCEDURE.md` | Hardware, flash, dashboard, APRS, LinPac |
+| `PROCEDURE.md` | Hardware, flash, dashboard, APRS, LinPac, linBPQ (§16) |
 | `install-digipi.bat` / `install-digipi.ps1` | Windows SD-card flasher |
 | `install-digipi.sh` | Linux/macOS flasher |
 | `scripts/configure-signalink-d700.sh` | On-Pi SignaLink ALSA / Direwolf setup |
 | `scripts/install-linbpq.sh` | Install linBPQ and add **AX.25 linBPQ** to the dashboard |
+| `scripts/enable-linbpq-mail-chat.sh` | Existing install: start BBS (`LINMAIL`) and Chat (`LINCHAT`) |
+| `scripts/enable-linbpq-winlink.sh` | Existing install: enable Winlink CMS (`RMS`) |

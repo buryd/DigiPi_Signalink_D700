@@ -16,8 +16,8 @@ if command -v remount >/dev/null 2>&1; then
 fi
 mount -o remount,rw / 2>/dev/null || true
 
-CALL="KC4JIR"
-GRID="EM82EN"
+CALL="NOCALL"
+GRID="AA00AA"
 if [[ -f /home/pi/localize.env ]]; then
   # shellcheck disable=SC1091
   source /home/pi/localize.env
@@ -25,6 +25,11 @@ if [[ -f /home/pi/localize.env ]]; then
   GRID="$(echo "${NEWGRID:-${GRID}}" | tr '[:lower:]' '[:upper:]')"
 fi
 CALL="${CALL%%-*}"
+
+if [[ "${CALL}" == "NOCALL" ]]; then
+  echo "Need NEWCALL in /home/pi/localize.env (DigiPi Initialize)." >&2
+  exit 1
+fi
 
 systemctl stop linbpq
 

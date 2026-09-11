@@ -60,6 +60,7 @@ load_station() {
     NODEPASS="$(awk '/^[[:alpha:]]/{print $4; exit}' /etc/ax25/uronode.perms)"
     NODEPASS="${NODEPASS:-abc123}"
   fi
+  WLPASS="${NEWWLPASS:-}"
   inf "Station ${CALL}  grid ${GRID}"
 }
 
@@ -123,10 +124,23 @@ install_binary() {
 
 write_bpq32_cfg() {
   local cfg="${LINBPQ_DIR}/bpq32.cfg"
+  local cms_block rms_app
   GRID_UP="$(echo "${GRID}" | tr '[:lower:]' '[:upper:]')"
   if [[ "${LINBPQ_KEEP_CFG:-0}" == "1" ]] && [[ -f "${cfg}" ]] && grep -q 'DRIVER=TELNET' "${cfg}"; then
     inf "Keeping existing ${cfg}"
     return 0
+  fi
+  cms_block=" CMS=0"
+  rms_app=""
+  if [[ -n "${WLPASS}" ]]; then
+    cms_block=" CMS=1
+ CMSCALL=${CALL}
+ CMSPASS=${WLPASS}
+ FALLBACKTORELAY=1
+ RELAYAPPL=BBS"
+    rms_app="APPLICATION 3,RMS,C 1 CMS,${CALL}-10,RMS,255"
+  else
+    inf "No Winlink password (NEWWLPASS); CMS/RMS not enabled."
   fi
   cat > "${cfg}" <<EOF
 ; DigiPi linBPQ - SignaLink USB + Kenwood TM-D700 DATA port
@@ -164,10 +178,11 @@ ${CALL} linBPQ DigiPi
 INFOMSG:
 ${CALL} linBPQ node on DigiPi / SignaLink / TM-D700
 Packet simplex (often 145.010). Exclusive of Linux AX.25 Node Network.
+RMS reaches Winlink CMS over the internet. Leave DigiPi Winlink Email Server off.
 ***
 
 CTEXT:
-Welcome to ${CALL} linBPQ. BBS CHAT NODES PORTS BYE
+Welcome to ${CALL} linBPQ. BBS CHAT RMS NODES PORTS BYE
 ***
 
 PORT
@@ -183,7 +198,7 @@ PORT
  LOGINPROMPT=user:
  PASSWORDPROMPT=password:
  MAXSESSIONS=10
- CMS=0
+${cms_block}
  USER=sysop,${NODEPASS},${CALL},,SYSOP
 ENDPORT
 
@@ -210,6 +225,7 @@ ENDPORT
 
 APPLICATION 1,BBS,,${CALL}-1,BBS,255
 APPLICATION 2,CHAT,,${CALL}-11,CHAT,255
+${rms_app}
 LINMAIL
 LINCHAT
 EOF
@@ -226,6 +242,86 @@ ensure_linmail_linchat() {
   if ! grep -q '^LINCHAT' "${cfg}"; then
     printf 'LINCHAT\n' >> "${cfg}"
   fi
+  chown pi:pi "${cfg}"
+}
+
+ensure_winlink_cms() {
+  local cfg="${LINBPQ_DIR}/bpq32.cfg"
+  [[ -f "${cfg}" ]] || return 0
+  if [[ -z "${WLPASS}" ]]; then
+    inf "No Winlink password (NEWWLPASS); leave CMS off."
+    return 0
+  fi
+  export LINBPQ_CALL="${CALL}"
+  export LINBPQ_WLPASS="${WLPASS}"
+  python3 - "${cfg}" <<'PY'
+import os, re, sys
+from pathlib import Path
+
+cfg = Path(sys.argv[1])
+text = cfg.read_text(encoding="utf-8", errors="surrogateescape")
+call = os.environ["LINBPQ_CALL"]
+wpass = os.environ["LINBPQ_WLPASS"]
+orig = text
+
+text = re.sub(r"(?m)^([ \t]*)CMS=0[ \t]*$", r"\1CMS=1", text)
+
+if not re.search(r"(?m)^[ \t]*CMSCALL=", text):
+    def _cms(m):
+        ind = m.group(1)
+        return (
+            f"{ind}CMS=1\n"
+            f"{ind}CMSCALL={call}\n"
+            f"{ind}CMSPASS={wpass}\n"
+            f"{ind}FALLBACKTORELAY=1\n"
+            f"{ind}RELAYAPPL=BBS"
+        )
+    text = re.sub(r"(?m)^([ \t]*)CMS=1[ \t]*$", _cms, text, count=1)
+else:
+    text = re.sub(r"(?m)^([ \t]*)CMSCALL=.*$", rf"\1CMSCALL={call}", text, count=1)
+
+    def _pass(m):
+        return f"{m.group(1)}CMSPASS={wpass}"
+
+    if re.search(r"(?m)^[ \t]*CMSPASS=", text):
+        text = re.sub(r"(?m)^([ \t]*)CMSPASS=.*$", _pass, text, count=1)
+    else:
+        text = re.sub(
+            r"(?m)^([ \t]*)CMSCALL=.*$",
+            lambda m: f"{m.group(1)}CMSCALL={call}\n{m.group(1)}CMSPASS={wpass}",
+            text,
+            count=1,
+        )
+    if not re.search(r"(?m)^[ \t]*FALLBACKTORELAY=", text):
+        text = re.sub(
+            r"(?m)^([ \t]*)CMSPASS=.*$",
+            lambda m: (
+                f"{m.group(1)}CMSPASS={wpass}\n"
+                f"{m.group(1)}FALLBACKTORELAY=1\n"
+                f"{m.group(1)}RELAYAPPL=BBS"
+            ),
+            text,
+            count=1,
+        )
+
+app = f"APPLICATION 3,RMS,C 1 CMS,{call}-10,RMS,255"
+if not re.search(r"(?m)^APPLICATION [0-9]+,RMS,", text):
+    text = text.rstrip() + "\n" + app + "\n"
+
+text = re.sub(
+    r"(Welcome to [^\n]* linBPQ\. )BBS CHAT(?! RMS)",
+    r"\1BBS CHAT RMS",
+    text,
+    count=1,
+)
+
+if text != orig:
+    cfg.write_text(text, encoding="utf-8", errors="surrogateescape")
+    print(f"Enabled Winlink CMS/RMS in {cfg}")
+else:
+    print(f"Winlink CMS/RMS already set in {cfg}")
+PY
+  unset LINBPQ_WLPASS LINBPQ_CALL
   chown pi:pi "${cfg}"
 }
 
@@ -550,6 +646,7 @@ main() {
   install_binary
   write_bpq32_cfg
   ensure_linmail_linchat
+  ensure_winlink_cms
   write_chatconfig
   write_direwolf_conf
   write_wrapper
@@ -563,6 +660,7 @@ main() {
   inf "Refresh the home page. AX.25 linBPQ sits under AX.25 Node Network."
   inf "Web console: http://$(hostname):${HTTP_PORT}/  (user sysop)"
   inf "Do not run Linux Node and linBPQ together. Packet simplex, not 144.390."
+  inf "RMS uses Winlink CMS over the internet. Leave DigiPi Winlink Email Server off."
   inf "After BBS use, click Save Configuration so /home/pi/linbpq is written to SD."
 }
 
