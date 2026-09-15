@@ -287,6 +287,8 @@ TNC/igate does **not** digipeat `WIDE1-1`. That is **APRS Digipeater**. Internet
 
 Decodes but no map: radio path is fine, APRS-IS login is not. No decodes: audio, jumpers, frequency, or the radio TNC still on.
 
+Full write-up, including which half to blame and where the config lives: **[APRS-TNC-IGATE.md](APRS-TNC-IGATE.md)**.
+
 ---
 
 ## 14. LinPac on DigiPi

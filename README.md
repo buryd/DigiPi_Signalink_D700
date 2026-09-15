@@ -30,7 +30,7 @@ sudo bash /boot/firmware/install-linbpq.sh
 
 | Goal | What to use |
 | --- | --- |
-| APRS igate + chat | Dashboard **APRS TNC/igate**, then **APRS WebChat** |
+| APRS igate + chat | Dashboard **APRS TNC/igate**, then **APRS WebChat**. Details: [APRS-TNC-IGATE.md](APRS-TNC-IGATE.md) |
 | Keyboard packet (LinPac) | TNC/igate or Node on, then **AXCall** → LinPac |
 | linBPQ node / BBS / Winlink | [PROCEDURE.md](PROCEDURE.md) §16, then dashboard **AX.25 linBPQ** |
 | Switch meanings | [PROCEDURE.md](PROCEDURE.md) §12 |
@@ -41,6 +41,7 @@ sudo bash /boot/firmware/install-linbpq.sh
 | File | Purpose |
 | --- | --- |
 | `PROCEDURE.md` | Hardware, flash, dashboard, APRS, LinPac, linBPQ (§16) |
+| `APRS-TNC-IGATE.md` | What the **APRS TNC/igate** switch does, and how to debug each half |
 | `install-digipi.bat` / `install-digipi.ps1` | Windows SD-card flasher |
 | `install-digipi.sh` | Linux/macOS flasher |
 | `scripts/configure-signalink-d700.sh` | On-Pi SignaLink ALSA / Direwolf setup |
