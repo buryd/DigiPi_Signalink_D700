@@ -24,6 +24,8 @@ Hardware / flash / SignaLink: [PROCEDURE.md](PROCEDURE.md).
 | **FLDigi** | [FLDIGI.md](FLDIGI.md) |
 | **SSTV** | [SSTV.md](SSTV.md) |
 
-Square colors: **grey** = off, **green** = running, **red** = failed → open **SysLog** / **PktLog**.
+Square colors: **grey** = off, **green** = running, **red** = failed → open **SysLog** / **PacketLog**.
+
+Footer link names on current DigiPi: LinPac is **AX.25** (`axcall.php`; older images said **AXCall**). Direwolf log is **PacketLog**.
 
 Switches do **not** survive reboot. Auto-start: edit `/etc/systemd/system/digipi-boot.service` and uncomment **one** modem `ExecStart=…` line.

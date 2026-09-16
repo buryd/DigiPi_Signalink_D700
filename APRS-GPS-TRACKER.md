@@ -37,7 +37,7 @@ Fixed home stations that only need a map presence usually use **APRS TNC/igate**
 
 | Link | What it does |
 | --- | --- |
-| **PktLog** | Confirm beacons and audio when a modem is also running |
+| **PacketLog** | Confirm beacons and audio when a modem is also running |
 | **SysLog** | Tracker / GPS service errors |
 | **Shell** | Check GPS devices (`/dev/tty*`, `gps*` tools) |
 | **SystemInfo** / GPS viewer (if present on your image) | Grid / fix status on newer DigiPi builds |
@@ -50,7 +50,7 @@ Fixed home stations that only need a map presence usually use **APRS TNC/igate**
 1. GPS plugged in and visible after Initialize / reboot.
 2. Start the APRS modem you intend (**TNC/igate** or **Digipeater**).
 3. Start **APRS GPS Tracker**.
-4. **PktLog** / aprs.fi — position updates.
+4. **PacketLog** / aprs.fi — position updates.
 
 ---
 

@@ -32,7 +32,7 @@ Default DigiPi WebChat is **RF-centric** (via KISS). It can be pointed at APRS-I
 | Link | When it works | What it does |
 | --- | --- | --- |
 | **Webchat** | Modem green **and** **APRS WebChat** green | Open the messaging UI (send/receive APRS text, beacon) |
-| **PktLog** | Modem green | See your TX/RX packets and audio level |
+| **PacketLog** | Modem green | See your TX/RX packets and audio level |
 | **Audio** | Anytime | Trim SignaLink levels so WebChat TX keys cleanly |
 | **SysLog** | Switch red | WebChat or modem start errors |
 | [aprs.fi](https://aprs.fi) | After igate path works | Confirm YOURCALL-2 / messages that reached the internet |
@@ -43,7 +43,7 @@ Default DigiPi WebChat is **RF-centric** (via KISS). It can be pointed at APRS-I
 
 1. Radio on **144.390** (US), SignaLink **DLY** min, internal TNC off.
 2. **APRS TNC/igate** (or Digipeater) → green.
-3. **PktLog** → audio ~50, other stations decode.
+3. **PacketLog** → audio ~50, other stations decode.
 4. **APRS WebChat** → green.
 5. **Webchat** → send a test message or beacon.
 

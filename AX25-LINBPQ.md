@@ -31,11 +31,11 @@ Tune to **packet simplex** (often 145.010 / 145.030), not 144.390.
 | Link | When it works | What it does |
 | --- | --- | --- |
 | **linBPQ** | Switch green | Web UI — [http://digipi:8008/](http://digipi:8008/). Login **`sysop`** / DigiPi **node password** (Initialize; default `abc123`), not the Linux `pi` password |
-| **PktLog** | Switch green | Direwolf traffic for the linBPQ modem |
+| **PacketLog** | Switch green | Direwolf traffic for the linBPQ modem |
 | **Audio** | Anytime | SignaLink levels |
 | **SysLog** | Switch red | Why linBPQ / Direwolf failed |
 | **Shell** | Always | Edit `/home/pi/linbpq/` after stop + `sudo remount` (see PROCEDURE §16) |
-| **AXCall** | Not the primary linBPQ UI | Prefer the **linBPQ** web terminal for BPQ commands |
+| **AX.25** | Not the primary linBPQ UI | Prefer the **linBPQ** web terminal for BPQ commands |
 
 ---
 

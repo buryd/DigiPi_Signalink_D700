@@ -30,14 +30,14 @@ Tune the D700 to local **packet simplex** (often **145.010 / 145.050**), not APR
 
 | Link | When it works | What it does |
 | --- | --- | --- |
-| **AXCall** | Node (or TNC) green | Browser terminal into **LinPac** / `axcall` for keyboard packet |
-| **PktLog** | Modem green | Packet decode / TX log and audio average (~50) |
+| **AX.25** | Node (or TNC) green | Browser terminal into **LinPac** (`axcall.php`). Same link older DigiPi images labeled **AXCall**. |
+| **PacketLog** | Modem green | Packet decode / TX log and audio average (~50) |
 | **Audio** | Anytime | SignaLink TX/RX mixer |
 | **SysLog** | Switch red | Node / modem failures |
 | **Shell** | Always | `axcall radio OTHERCALL`, config edits after `sudo remount` |
 | **Bluetooth** | Paired phone | Phone apps as wireless KISS clients when the modem is up |
 
-**LinPac is not a switch.** Start **AX.25 Node Network** (or **APRS TNC/igate**), then open **AXCall**.
+**LinPac is not a switch.** Start **AX.25 Node Network** (or **APRS TNC/igate**), then open **AX.25**.
 
 ---
 
@@ -46,8 +46,8 @@ Tune the D700 to local **packet simplex** (often **145.010 / 145.050**), not APR
 1. D700 on packet simplex, internal TNC off, SignaLink **DLY** min.
 2. Leave linBPQ / APRS TNC / Winlink RMS **off**.
 3. **AX.25 Node Network** → green.
-4. **AXCall** → LinPac; `mycall` = **YOURCALL** (no SSID).
-5. Optional: **PktLog** / **Audio** to verify levels.
+4. **AX.25** → LinPac; `mycall` = **YOURCALL** (no SSID).
+5. Optional: **PacketLog** / **Audio** to verify levels.
 
 ---
 

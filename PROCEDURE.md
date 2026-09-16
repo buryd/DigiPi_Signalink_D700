@@ -171,7 +171,7 @@ Then reboot from the DigiPi home page.
 On http://digipi/ open **Audio**:
 
 - Playback / Speaker → TX into SignaLink (often 70–90%). Too low = no PTT. Too high = dirty FM.
-- Capture (press F4 in alsamixer) → RX. Direwolf **PktLog** average should land near **50** (range 10–90).
+- Capture (press F4 in alsamixer) → RX. Direwolf **PacketLog** average should land near **50** (range 10–90).
 
 If the SignaLink PTT LED never lights: raise Pi playback **and** the SignaLink **TX** knob.
 
@@ -182,7 +182,7 @@ If the SignaLink PTT LED never lights: raise Pi playback **and** the SignaLink *
 1. D700 on 144.390 (or local APRS), squelch just closed, low power.
 2. SignaLink USB LED on; RX LED flickers with local packets.
 3. DigiPi home page: start **APRS IGate** or **Digipeater**.
-4. **PktLog** should decode other stations.
+4. **PacketLog** should decode other stations.
 5. Send a test from **APRS WebChat**. SignaLink PTT LED and D700 TX should key, then drop quickly (DLY at minimum).
 6. Check [aprs.fi](https://aprs.fi) for your call.
 
@@ -229,7 +229,7 @@ The home page toggles are **service on/off**, not a settings form. Callsign, gri
 | --- | --- |
 | Grey | Off |
 | Green | Running |
-| Red | Failed — open **SysLog** / **PktLog** |
+| Red | Failed — open **SysLog** / **PacketLog** |
 
 **One radio modem at a time.** Starting APRS TNC stops digipeater, node, Winlink RMS, FT8, FLDigi, and the rest. Direwolf cannot share the SignaLink with two stacks.
 
@@ -240,7 +240,7 @@ The home page toggles are **service on/off**, not a settings form. Callsign, gri
 | **APRS Digipeater** | 1200-baud Direwolf + RF digipeat | [APRS-DIGIPEATER.md](APRS-DIGIPEATER.md) |
 | **APRS GPS Tracker** | Mobile GPS beacon | Needs GPS. [APRS-GPS-TRACKER.md](APRS-GPS-TRACKER.md) |
 | **APRS WebChat** | APRS messaging app | Modem on first. [APRS-WEBCHAT.md](APRS-WEBCHAT.md) |
-| **AX.25 Node Network** | Linux node (`YOURCALL-4`) | Then **AXCall**. [AX25-NODE.md](AX25-NODE.md) |
+| **AX.25 Node Network** | Linux node (`YOURCALL-4`) | Then **AX.25**. [AX25-NODE.md](AX25-NODE.md) |
 | **AX.25 linBPQ** | G8BPQ linBPQ (`YOURCALL-7`) | Install §16. [AX25-LINBPQ.md](AX25-LINBPQ.md) |
 | **Winlink Email Server** | RMS gateway (`YOURCALL-10`) | [WINLINK-EMAIL-SERVER.md](WINLINK-EMAIL-SERVER.md) |
 | **Pat Winlink Client** | Your Winlink mailbox | Then **PatEmail**. [PAT-WINLINK-CLIENT.md](PAT-WINLINK-CLIENT.md) |
@@ -251,11 +251,13 @@ The home page toggles are **service on/off**, not a settings form. Callsign, gri
 
 Full index: **[DASHBOARD-SWITCHES.md](DASHBOARD-SWITCHES.md)**.
 
-**LinPac is not a switch.** Start **APRS TNC/igate** (or Node), then **AXCall** → LinPac.
+**LinPac is not a switch.** Start **APRS TNC/igate** (or Node), then **AX.25** → LinPac.
 
 **linBPQ** is a switch under AX.25 after you run `install-linbpq.sh`. It runs its own Direwolf (not the APRS igate) and is exclusive with Node, TNC, and Winlink RMS.
 
-Bottom links (**Webchat**, **PktLog**, **Audio**, **AXCall**, **Shell**, …) only work after the matching switch is green.
+Bottom links (**Webchat**, **PacketLog**, **Audio**, **AX.25**, **Shell**, …) only work after the matching switch is green.
+
+On current DigiPi images the LinPac helper is labeled **AX.25** (it opens `axcall.php`). Older docs/images called the same link **AXCall**. Direwolf’s log link is **PacketLog** (not “PktLog”).
 
 Switches **do not survive reboot**. Stock `digipi-boot.service` starts nothing but the “Online” banner. To auto-start IGate:
 
@@ -286,7 +288,7 @@ TNC/igate does **not** digipeat `WIDE1-1`. That is **APRS Digipeater** — full 
 
 1. D700 on **144.390 FM** (US), internal TNC off, SignaLink **DLY** fully CCW.
 2. Dashboard: **APRS TNC/igate** ON.
-3. **PktLog** — other stations decode; audio average near **50**.
+3. **PacketLog** — other stations decode; audio average near **50**.
 4. **APRS WebChat** ON → **Webchat** to send a message or beacon.
 5. Check `YOURCALL-2` on aprs.fi.
 
@@ -303,7 +305,7 @@ Do **not** install a second Direwolf/LinPac stack on this image. DigiPi already 
 1. Hardware and `configure-signalink-d700.sh` as above.
 2. Tune the D700 to local **packet simplex** (often 145.010 / 145.050), not APRS 144.390, unless you intend to chat on APRS.
 3. Dashboard: **APRS TNC/igate** ON (1200-baud modem). For HF 300 baud only, use **APRS HF TNC**.
-4. Open **AXCall** / LinPac (browser terminal runs `/home/pi/linpac.sh`). If no TNC is up, that script starts 1200-baud TNC and attaches AX.25 port `radio`.
+4. Open **AX.25** / LinPac (browser terminal runs `/home/pi/linpac.sh`). If no TNC is up, that script starts 1200-baud TNC and attaches AX.25 port `radio`.
 
 Initialize writes your callsign into `/home/pi/config/LinPac/macro/init.mac` (runtime copy is `/home/pi/.config/LinPac`, often under `/run`). Confirm:
 

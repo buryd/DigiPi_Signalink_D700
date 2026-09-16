@@ -27,7 +27,7 @@ Exclusive with other radio modems (VHF TNC, Digipeater, Node, Winlink RMS, FLDig
 
 | Link | What it does |
 | --- | --- |
-| **PktLog** | Direwolf log and audio levels for the HF modem |
+| **PacketLog** | Direwolf log and audio levels for the HF modem |
 | **Webchat** | After **APRS WebChat** is also on — messaging over the HF KISS path |
 | **Audio** | Mixer for TX/RX levels |
 | **SysLog** | Why the switch went red |

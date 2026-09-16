@@ -32,7 +32,7 @@ Set the Winlink password in **Initialize**. The Pi usually needs **internet** fo
 
 | Link | When it works | What it does |
 | --- | --- | --- |
-| **PktLog** | Server / modem green | See connects and packet audio (~50) |
+| **PacketLog** | Server / modem green | See connects and packet audio (~50) |
 | **Audio** | Anytime | SignaLink TX/RX levels for clean packet |
 | **SysLog** | Switch red | RMS / modem start failures |
 | **Shell** | Always | Service / config checks after `sudo remount` |
@@ -47,7 +47,7 @@ Tune to local **packet** / Winlink packet frequency used in your area (often pac
 1. Initialize includes Winlink password; radio TNC off; SignaLink **DLY** min.
 2. All other radio modems **off**.
 3. **Winlink Email Server** → green.
-4. **PktLog** / **Audio** to verify the modem.
+4. **PacketLog** / **Audio** to verify the modem.
 5. Remote client connects to **YOURCALL-10**.
 
 ---

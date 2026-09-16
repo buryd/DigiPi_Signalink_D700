@@ -69,10 +69,10 @@ Home page **switches** start services. Home page **links** (bottom row and relat
 | Link | When it works | What it does |
 | --- | --- | --- |
 | **Webchat** | **APRS TNC/igate** green **and** **APRS WebChat** green | Browser APRS messaging (APRSd). Send/receive APRS messages and beacons over RF (via Direwolf KISS). Default path stays RF-centric so messaging still works if the internet drops. |
-| **PktLog** | **APRS TNC/igate** green | Live Direwolf packet log. Shows decoded stations and **audio average** (aim near **50**, usable ~10–90). Best tool to prove the radio path is working. |
-| **Audio** | Always available; use with TNC up | Opens the mixer (**alsamixer**) for SignaLink **playback (TX)** and **capture (RX)**. Adjust here, then confirm levels in **PktLog**. Press **Save Configuration** after good levels. |
+| **PacketLog** | **APRS TNC/igate** green | Live Direwolf packet log. Shows decoded stations and **audio average** (aim near **50**, usable ~10–90). Best tool to prove the radio path is working. |
+| **Audio** | Always available; use with TNC up | Opens the mixer (**alsamixer**) for SignaLink **playback (TX)** and **capture (RX)**. Adjust here, then confirm levels in **PacketLog**. Press **Save Configuration** after good levels. |
 | **SysLog** | Always; use when a switch goes **red** | System / service log. Shows why Direwolf or WebChat failed to start (sound card busy, another modem still running, config error). |
-| **AXCall** | **APRS TNC/igate** (or Node) green | Browser terminal into **LinPac** / `axcall` — keyboard packet over the same 1200-baud modem. Tune the radio to **packet simplex** (often 145.010 / 145.050) unless you intend to chat on APRS 144.390. |
+| **AX.25** | **APRS TNC/igate** (or Node) green | Browser terminal into **LinPac** (`axcall.php`) — keyboard packet over the same 1200-baud modem. Tune the radio to **packet simplex** (often 145.010 / 145.050) unless you intend to chat on APRS 144.390. |
 | **Shell** | Always | Browser command shell on the Pi (`sudo remount`, edits, `systemctl`, etc.). |
 | **Bluetooth** | Pairing for phone apps | Pair a phone so apps like **APRSDroid** can use DigiPi as a wireless KISS TNC (same Direwolf stack when TNC/igate is on). |
 
@@ -85,11 +85,11 @@ Home page **switches** start services. Home page **links** (bottom row and relat
 ### Link order for a normal APRS session
 
 1. **APRS TNC/igate** → ON (green).
-2. **PktLog** → confirm other stations decode; audio ~50.
+2. **PacketLog** → confirm other stations decode; audio ~50.
 3. **APRS WebChat** → ON (green).
 4. **Webchat** → send a message or beacon.
 5. [aprs.fi](https://aprs.fi) → confirm **YOURCALL-2**.
-6. Optional: **Audio** to trim levels; **AXCall** for LinPac on packet simplex; **SysLog** if anything turns red.
+6. Optional: **Audio** to trim levels; **AX.25** for LinPac on packet simplex; **SysLog** if anything turns red.
 
 If **Webchat** does nothing: WebChat switch is still off, or TNC/igate was never started.
 
@@ -115,14 +115,14 @@ If **Webchat** does nothing: WebChat switch is still off, or TNC/igate was never
 
 ## 5. Which half is broken
 
-| PktLog decodes? | On aprs.fi? | Conclusion |
+| PacketLog decodes? | On aprs.fi? | Conclusion |
 | --- | --- | --- |
 | Yes | Yes | Both halves working. |
 | **Yes** | **No** | Radio OK. **IGate** problem: internet, callsign, or APRS passcode. |
 | **No** | No | **TNC** problem: audio, jumpers, frequency, or radio TNC still on. |
 | No | Yes (position only) | Internet beacon works; deaf on RF — still a TNC problem. |
 
-A decode in **PktLog** proves antenna → radio → DATA jack → SignaLink → USB → modem. Stop chasing audio once that works.
+A decode in **PacketLog** proves antenna → radio → DATA jack → SignaLink → USB → modem. Stop chasing audio once that works.
 
 ---
 
@@ -146,7 +146,7 @@ Fixed igates normally use `sendto=IG`.
 | Runtime copy | under `/run` (rebuilt every start) |
 | Station identity | `/home/pi/localize.env` |
 | systemd unit | `tnc.service` |
-| Log for PktLog | Direwolf log |
+| Log for PacketLog | Direwolf log |
 | Front display | `direwatch.py` |
 
 ```bash
@@ -184,8 +184,8 @@ Uncomment **one** `ExecStart=systemctl start tnc` line. Leave other modem lines 
 | Symptom | Cause |
 | --- | --- |
 | No USB sound card | SignaLink unplugged, cheap hub, weak PSU |
-| PktLog idle, no decodes | Wrong jumpers/band/volume; radio TNC still on |
-| Garbled decodes | RX level wrong — aim PktLog ~50 |
+| PacketLog idle, no decodes | Wrong jumpers/band/volume; radio TNC still on |
+| Garbled decodes | RX level wrong — aim PacketLog ~50 |
 | TX audio, radio never keys | SignaLink **TX** / Pi playback too low; Speaker muted in **Audio**; PTT jumper missing |
 | Radio stays keyed | SignaLink **DLY** not at minimum |
 | Decodes OK, nothing on aprs.fi | IGate: internet / `MYCALL` / passcode |
@@ -203,7 +203,7 @@ Uncomment **one** `ExecStart=systemctl start tnc` line. Leave other modem lines 
 | Igate call | YOURCALL-2 |
 | Radio internal TNC | Off |
 | SignaLink DLY | Fully CCW |
-| PktLog audio target | ~50 |
+| PacketLog audio target | ~50 |
 | Dashboard | http://digipi/ or http://10.0.0.5/ |
 | Writable filesystem | `sudo remount` |
 

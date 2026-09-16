@@ -33,7 +33,7 @@ sudo bash /boot/firmware/install-linbpq.sh
 | All dashboard switches | **[DASHBOARD-SWITCHES.md](DASHBOARD-SWITCHES.md)** (index) |
 | APRS igate + chat | **APRS TNC/igate**, then **APRS WebChat** — [APRS-TNC-IGATE.md](APRS-TNC-IGATE.md), [APRS-WEBCHAT.md](APRS-WEBCHAT.md) |
 | APRS digipeater | **APRS Digipeater** — [APRS-DIGIPEATER.md](APRS-DIGIPEATER.md) |
-| Keyboard packet (LinPac) | Node or TNC/igate on, then **AXCall** — [AX25-NODE.md](AX25-NODE.md) |
+| Keyboard packet (LinPac) | Node or TNC/igate on, then **AX.25** — [AX25-NODE.md](AX25-NODE.md) |
 | linBPQ node / BBS / Winlink | [PROCEDURE.md](PROCEDURE.md) §16, [AX25-LINBPQ.md](AX25-LINBPQ.md) |
 | Switch meanings (short) | [PROCEDURE.md](PROCEDURE.md) §12 |
 | Why reboot takes ~1 minute | [PROCEDURE.md](PROCEDURE.md) §15 |

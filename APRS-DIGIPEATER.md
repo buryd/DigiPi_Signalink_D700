@@ -76,11 +76,11 @@ Home page **switches** start services. Home page **links** open tools in a new t
 
 | Link | When it works | What it does |
 | --- | --- | --- |
-| **PktLog** | **APRS Digipeater** green | Live Direwolf packet log. Shows decoded stations, digipeated traffic, and **audio average** (aim near **50**, usable ~10–90). Best proof the radio path and digi are alive. |
+| **PacketLog** | **APRS Digipeater** green | Live Direwolf packet log. Shows decoded stations, digipeated traffic, and **audio average** (aim near **50**, usable ~10–90). Best proof the radio path and digi are alive. |
 | **Webchat** | **APRS Digipeater** green **and** **APRS WebChat** green | Browser APRS messaging (APRSd) over the Digipeater’s KISS/TNC path. Send/receive APRS messages and beacons on RF. |
-| **Audio** | Always available; use with Digipeater up | Mixer (**alsamixer**) for SignaLink **playback (TX)** and **capture (RX)**. Confirm levels in **PktLog**, then **Save Configuration**. |
+| **Audio** | Always available; use with Digipeater up | Mixer (**alsamixer**) for SignaLink **playback (TX)** and **capture (RX)**. Confirm levels in **PacketLog**, then **Save Configuration**. |
 | **SysLog** | Always; use when a switch goes **red** | Service log — why Digipeater or WebChat failed (sound card busy, another modem still up, config error). |
-| **AXCall** | Digipeater (or Node / TNC) provides a modem | Browser terminal for **LinPac** / `axcall`. For keyboard packet, tune to **packet simplex** (often 145.010 / 145.050), not APRS 144.390, unless you intend to chat on the APRS channel. Prefer **APRS TNC/igate** or **Node** for routine LinPac; Digipeater’s job is APRS hop service. |
+| **AX.25** | Digipeater (or Node / TNC) provides a modem | Browser terminal for **LinPac** (`axcall.php`). For keyboard packet, tune to **packet simplex** (often 145.010 / 145.050), not APRS 144.390, unless you intend to chat on the APRS channel. Prefer **APRS TNC/igate** or **Node** for routine LinPac; Digipeater’s job is APRS hop service. |
 | **Shell** | Always | Browser shell on the Pi (`sudo remount`, edits, `systemctl`). |
 | **Bluetooth** | Pairing for phone apps | Pair a phone so **APRSDroid** (etc.) can use DigiPi as a wireless KISS TNC while Digipeater (or TNC/igate) is the active modem. |
 
@@ -93,7 +93,7 @@ Home page **switches** start services. Home page **links** open tools in a new t
 ### Link order for a normal Digipeater session
 
 1. **APRS Digipeater** → ON (green). Leave **APRS TNC/igate** off.
-2. **PktLog** → confirm other stations decode; watch for digipeated hops; audio ~50.
+2. **PacketLog** → confirm other stations decode; watch for digipeated hops; audio ~50.
 3. Optional: **APRS WebChat** → ON, then **Webchat** to send a local message/beacon.
 4. Optional: **Audio** to trim levels; **SysLog** if the Digipeater square turns red.
 
@@ -130,7 +130,7 @@ Only run a digipeater if your location and coordination make sense (fill a cover
 | Runtime copy | under `/run` (rebuilt every start) |
 | Station identity | `/home/pi/localize.env` |
 | systemd unit | `digipeater.service` |
-| Log for PktLog | Direwolf digipeater log |
+| Log for PacketLog | Direwolf digipeater log |
 | Front display | `direwatch.py` |
 
 Stock DigiPi digipeater behavior (adjust in the conf to taste):
@@ -179,7 +179,7 @@ Leave **tnc**, **node**, **winlinkrms**, etc. commented — only one radio modem
 | Symptom | Cause |
 | --- | --- |
 | Switch red | **SysLog** — another modem still up, or sound card busy |
-| PktLog idle, no decodes | Wrong jumpers/band/volume; radio TNC still on |
+| PacketLog idle, no decodes | Wrong jumpers/band/volume; radio TNC still on |
 | Decodes but never digipeats | Path does not request `WIDE1-1` / digi alias; check `direwolf.digipeater.conf` |
 | Radio stays keyed | SignaLink **DLY** not at minimum |
 | Webchat link dead | Start **APRS Digipeater**, then **APRS WebChat**, then **Webchat** |
@@ -198,7 +198,7 @@ Leave **tnc**, **node**, **winlinkrms**, etc. commented — only one radio modem
 | Exclusive with | APRS TNC/igate, Node, linBPQ, Winlink RMS, … |
 | Radio internal TNC | Off |
 | SignaLink DLY | Fully CCW |
-| PktLog audio target | ~50 |
+| PacketLog audio target | ~50 |
 | Dashboard | http://digipi/ or http://10.0.0.5/ |
 | Writable filesystem | `sudo remount` |
 
