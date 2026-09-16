@@ -237,7 +237,7 @@ The home page toggles are **service on/off**, not a settings form. Callsign, gri
 | --- | --- | --- |
 | **APRS TNC/igate** | 1200-baud Direwolf + APRS-IS (`YOURCALL-2`) | VHF APRS / WebChat / LinPac modem |
 | **APRS HF TNC/igate** | 300-baud HF packet | Leave **off** (D700 is VHF FM) |
-| **APRS Digipeater** | 1200-baud Direwolf that also repeats RF | Do not run with TNC/igate |
+| **APRS Digipeater** | 1200-baud Direwolf that also repeats RF (`WIDE1-1`) | Do not run with TNC/igate. Details: [APRS-DIGIPEATER.md](APRS-DIGIPEATER.md) |
 | **APRS GPS Tracker** | Mobile GPS beacon | Needs a GPS receiver |
 | **APRS WebChat** | APRS messaging app | Turn TNC/igate **on first**, then this, then the **Webchat** link |
 | **AX.25 Node Network** | Linux node/BBS (`YOURCALL-4`) | Then **AXCall** or LinPac |
@@ -277,7 +277,7 @@ Uncomment **one** `ExecStart=systemctl start …` line (for example `tnc`). Leav
                  WebChat / KISS ──► SignaLink VOX ──► D700 TX
 ```
 
-TNC/igate does **not** digipeat `WIDE1-1`. That is **APRS Digipeater**. Internet → RF is limited (nearby messages); the whole APRS-IS feed is not dumped onto 144.390.
+TNC/igate does **not** digipeat `WIDE1-1`. That is **APRS Digipeater** — full write-up and home-page links: **[APRS-DIGIPEATER.md](APRS-DIGIPEATER.md)**. Digipeater internet → RF is limited (nearby messages); the whole APRS-IS feed is not dumped onto 144.390.
 
 1. D700 on **144.390 FM** (US), internal TNC off, SignaLink **DLY** fully CCW.
 2. Dashboard: **APRS TNC/igate** ON.
@@ -287,7 +287,7 @@ TNC/igate does **not** digipeat `WIDE1-1`. That is **APRS Digipeater**. Internet
 
 Decodes but no map: radio path is fine, APRS-IS login is not. No decodes: audio, jumpers, frequency, or the radio TNC still on.
 
-Full write-up, including which half to blame and where the config lives: **[APRS-TNC-IGATE.md](APRS-TNC-IGATE.md)**.
+Full write-up — switch, **home-page links**, which half to blame, config paths: **[APRS-TNC-IGATE.md](APRS-TNC-IGATE.md)**.
 
 ---
 
