@@ -235,16 +235,21 @@ The home page toggles are **service on/off**, not a settings form. Callsign, gri
 
 | Switch | What it starts | Use on this station |
 | --- | --- | --- |
-| **APRS TNC/igate** | 1200-baud Direwolf + APRS-IS (`YOURCALL-2`) | VHF APRS / WebChat / LinPac modem |
-| **APRS HF TNC/igate** | 300-baud HF packet | Leave **off** (D700 is VHF FM) |
-| **APRS Digipeater** | 1200-baud Direwolf that also repeats RF (`WIDE1-1`) | Do not run with TNC/igate. Details: [APRS-DIGIPEATER.md](APRS-DIGIPEATER.md) |
-| **APRS GPS Tracker** | Mobile GPS beacon | Needs a GPS receiver |
-| **APRS WebChat** | APRS messaging app | Turn TNC/igate **on first**, then this, then the **Webchat** link |
-| **AX.25 Node Network** | Linux node/BBS (`YOURCALL-4`) | Then **AXCall** or LinPac |
-| **AX.25 linBPQ** | G8BPQ linBPQ node/BBS (`YOURCALL-7`) | Install first (§16). Not with Node |
-| **Winlink Email Server** | RMS gateway (`YOURCALL-10`) | Not at the same time as Node |
-| **Pat Winlink Client** | Your Winlink mailbox | Then **PatEmail** |
-| **WSJTX / JS8Call / FLDigi / SSTV** | GUI apps over VNC/web | Poor fit for the D700 DATA jack |
+| **APRS TNC/igate** | 1200-baud Direwolf + APRS-IS (`YOURCALL-2`) | [APRS-TNC-IGATE.md](APRS-TNC-IGATE.md) |
+| **APRS HF TNC/igate** | 300-baud HF packet | Leave **off** (D700). [APRS-HF-TNC-IGATE.md](APRS-HF-TNC-IGATE.md) |
+| **APRS Digipeater** | 1200-baud Direwolf + RF digipeat | [APRS-DIGIPEATER.md](APRS-DIGIPEATER.md) |
+| **APRS GPS Tracker** | Mobile GPS beacon | Needs GPS. [APRS-GPS-TRACKER.md](APRS-GPS-TRACKER.md) |
+| **APRS WebChat** | APRS messaging app | Modem on first. [APRS-WEBCHAT.md](APRS-WEBCHAT.md) |
+| **AX.25 Node Network** | Linux node (`YOURCALL-4`) | Then **AXCall**. [AX25-NODE.md](AX25-NODE.md) |
+| **AX.25 linBPQ** | G8BPQ linBPQ (`YOURCALL-7`) | Install §16. [AX25-LINBPQ.md](AX25-LINBPQ.md) |
+| **Winlink Email Server** | RMS gateway (`YOURCALL-10`) | [WINLINK-EMAIL-SERVER.md](WINLINK-EMAIL-SERVER.md) |
+| **Pat Winlink Client** | Your Winlink mailbox | Then **PatEmail**. [PAT-WINLINK-CLIENT.md](PAT-WINLINK-CLIENT.md) |
+| **WSJTX FT8** | Weak-signal FT8 GUI | Poor fit for D700. [WSJTX-FT8.md](WSJTX-FT8.md) |
+| **JS8Call** | JS8 messaging GUI | Poor fit for D700. [JS8CALL.md](JS8CALL.md) |
+| **FLDigi** | Multi-mode digital GUI | Poor fit for D700. [FLDIGI.md](FLDIGI.md) |
+| **SSTV** | Slow-scan TV | [SSTV.md](SSTV.md) |
+
+Full index: **[DASHBOARD-SWITCHES.md](DASHBOARD-SWITCHES.md)**.
 
 **LinPac is not a switch.** Start **APRS TNC/igate** (or Node), then **AXCall** → LinPac.
 

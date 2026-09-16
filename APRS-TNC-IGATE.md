@@ -1,6 +1,6 @@
 # DigiPi APRS TNC / IGate
 
-What the **APRS TNC/igate** switch does, which home-page **links** work with it, and what those links do.
+What the **APRS TNC/igate** switch does, which home-page **links** work with it, and what those links do. All switches: [DASHBOARD-SWITCHES.md](DASHBOARD-SWITCHES.md).
 
 Hardware wiring, radio menus, and Initialize: [PROCEDURE.md](PROCEDURE.md) §1–§8. This document assumes those are done (Kenwood **TM-D700** + **SignaLink USB** station).
 

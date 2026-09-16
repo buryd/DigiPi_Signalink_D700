@@ -4,7 +4,7 @@ What the **APRS Digipeater** switch does, which home-page **links** work with it
 
 Hardware wiring, radio menus, and Initialize: [PROCEDURE.md](PROCEDURE.md) §1–§8. This document assumes those are done (Kenwood **TM-D700** + **SignaLink USB** station).
 
-For the other APRS modem switch (internet gateway, no RF digipeat): **[APRS-TNC-IGATE.md](APRS-TNC-IGATE.md)**.
+For the other APRS modem switch (internet gateway, no RF digipeat): **[APRS-TNC-IGATE.md](APRS-TNC-IGATE.md)**. All switches: [DASHBOARD-SWITCHES.md](DASHBOARD-SWITCHES.md).
 
 Dashboard: [http://digipi/](http://digipi/) or [http://10.0.0.5/](http://10.0.0.5/) (hotspot).
 

@@ -30,20 +30,30 @@ sudo bash /boot/firmware/install-linbpq.sh
 
 | Goal | What to use |
 | --- | --- |
-| APRS igate + chat | Dashboard **APRS TNC/igate**, then **APRS WebChat**. Details: [APRS-TNC-IGATE.md](APRS-TNC-IGATE.md) |
-| APRS digipeater | Dashboard **APRS Digipeater**. Details: [APRS-DIGIPEATER.md](APRS-DIGIPEATER.md) |
-| Keyboard packet (LinPac) | TNC/igate or Node on, then **AXCall** → LinPac |
-| linBPQ node / BBS / Winlink | [PROCEDURE.md](PROCEDURE.md) §16, then dashboard **AX.25 linBPQ** |
-| Switch meanings | [PROCEDURE.md](PROCEDURE.md) §12 |
+| All dashboard switches | **[DASHBOARD-SWITCHES.md](DASHBOARD-SWITCHES.md)** (index) |
+| APRS igate + chat | **APRS TNC/igate**, then **APRS WebChat** — [APRS-TNC-IGATE.md](APRS-TNC-IGATE.md), [APRS-WEBCHAT.md](APRS-WEBCHAT.md) |
+| APRS digipeater | **APRS Digipeater** — [APRS-DIGIPEATER.md](APRS-DIGIPEATER.md) |
+| Keyboard packet (LinPac) | Node or TNC/igate on, then **AXCall** — [AX25-NODE.md](AX25-NODE.md) |
+| linBPQ node / BBS / Winlink | [PROCEDURE.md](PROCEDURE.md) §16, [AX25-LINBPQ.md](AX25-LINBPQ.md) |
+| Switch meanings (short) | [PROCEDURE.md](PROCEDURE.md) §12 |
 | Why reboot takes ~1 minute | [PROCEDURE.md](PROCEDURE.md) §15 |
 
 ## Files
 
 | File | Purpose |
 | --- | --- |
-| `PROCEDURE.md` | Hardware, flash, dashboard, APRS, LinPac, linBPQ (§16) |
-| `APRS-TNC-IGATE.md` | What **APRS TNC/igate** does, which links work with it, and how to debug each half |
-| `APRS-DIGIPEATER.md` | What **APRS Digipeater** does, which links work with it, and how it differs from igate |
+| `PROCEDURE.md` | Hardware, flash, dashboard overview, APRS, LinPac, linBPQ (§16) |
+| `DASHBOARD-SWITCHES.md` | Index of every home-page switch document |
+| `APRS-TNC-IGATE.md` | **APRS TNC/igate** + links |
+| `APRS-DIGIPEATER.md` | **APRS Digipeater** + links |
+| `APRS-HF-TNC-IGATE.md` | **APRS HF TNC/igate** (leave off on D700) |
+| `APRS-GPS-TRACKER.md` | **APRS GPS Tracker** |
+| `APRS-WEBCHAT.md` | **APRS WebChat** + **Webchat** link |
+| `AX25-NODE.md` | **AX.25 Node Network** |
+| `AX25-LINBPQ.md` | **AX.25 linBPQ** (after install) |
+| `WINLINK-EMAIL-SERVER.md` | **Winlink Email Server** |
+| `PAT-WINLINK-CLIENT.md` | **Pat Winlink Client** + **PatEmail** |
+| `WSJTX-FT8.md` / `JS8CALL.md` / `FLDIGI.md` / `SSTV.md` | Weak-signal / multi-mode / SSTV GUIs |
 | `install-digipi.bat` / `install-digipi.ps1` | Windows SD-card flasher |
 | `install-digipi.sh` | Linux/macOS flasher |
 | `scripts/configure-signalink-d700.sh` | On-Pi SignaLink ALSA / Direwolf setup |
